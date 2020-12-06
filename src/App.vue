@@ -11,7 +11,7 @@
         class="portfolio__item"
         :style="{ backgroundImage: 'url(' + portfolio.src + ')' }"
         :label="portfolio.label"
-        @click="displayGalleria = !displayGalleria"
+        @click="displayFullscreen(index)"
       ></a>
     </div>
   </div>
@@ -20,48 +20,25 @@
     :totalRecords="allPortfolios.length"
     @page="pageChanged($event)"
   ></Paginator>
-  <Galleria
-    :value="allPortfolios"
-    :numVisible="page.rows"
-    containerStyle="max-width: 50%"
-    :circular="true"
-    :fullScreen="true"
-    :showItemNavigators="true"
-    v-model:visible="displayGalleria"
-    :maskClass="'portfolio__galleria'"
+  <Fullscreen
+      v-model:display="displayGalleria"
+      :portfolios="portfolios"
+      :numVisible="page.rows"
+      :activeIndex="activeIndex"
   >
-    <template #item="slotProps">
-      <figure>
-        <img :src="slotProps.item.src" :alt="slotProps.item.label" />
-        <figcaption class="portfolio__galleria--label">
-          <p>
-            <b>{{ slotProps.item.label }}</b>
-            <br />
-            {{ slotProps.item.description }}
-          </p>
-        </figcaption>
-      </figure>
-    </template>
-    <template #thumbnail="slotProps">
-      <img :src="slotProps.item.src" :alt="slotProps.item.label" />
-    </template>
-  </Galleria>
+  </Fullscreen>
 </template>
 
 <script lang="ts">
-declare const lightGallery: any;
-import Paginator, { PageState } from 'primevue/components/paginator/Paginator';
+import Fullscreen from '@/full-screen/Fullscreen.vue';
+import {IPortfolio} from '@/interfaces/portfolio.interface';
+import { PageState } from 'primevue/components/paginator/Paginator';
 import { Options, Vue } from 'vue-class-component';
 
-interface IPortfolio {
-  src: string;
-  label?: string;
-  category?: string;
-  description?: string;
-}
-
 @Options({
-  components: { Paginator }
+  components: {
+    Fullscreen
+  }
 })
 export default class App extends Vue {
   public allPortfolios: IPortfolio[] = [
@@ -91,11 +68,12 @@ export default class App extends Vue {
     }
   ];
   public componentKey = 0;
+  public displayGalleria = false;
+  public activeIndex = 0;
   private page = {
     currentPage: 0,
     rows: 6
   };
-
   private portfolios: IPortfolio[] = [];
 
   data() {
@@ -116,6 +94,11 @@ export default class App extends Vue {
 
   private displayPortfolioPerSlice(slice: number) {
     this.portfolios = this.allPortfolios.slice(slice, slice + this.page.rows);
+  }
+
+  displayFullscreen(index: number) {
+    this.activeIndex = index;
+    this.displayGalleria = !this.displayGalleria;
   }
 }
 </script>
