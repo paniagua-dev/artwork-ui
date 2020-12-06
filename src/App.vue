@@ -18,7 +18,7 @@
   <Paginator
     :rows="page.rows"
     :totalRecords="allPortfolios.length"
-    @page="isPageChanged($event)"
+    @page="pageChanged($event)"
   ></Paginator>
   <Galleria
     :value="allPortfolios"
@@ -110,7 +110,7 @@ export default class App extends Vue {
     this.displayPortfolioPerSlice(0);
   }
 
-  isPageChanged(pageState: PageState) {
+  pageChanged(pageState: PageState) {
     this.displayPortfolioPerSlice(pageState.first);
   }
 
