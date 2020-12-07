@@ -107,7 +107,6 @@ export default class App extends Vue {
   filterByCategory(category: string) {
     this.currentCategory = category;
     category = camelCase(category);
-
     if ((category) === 'all') {
 
       this.portfoliosByCategories = this.allPortfolios;
@@ -115,12 +114,10 @@ export default class App extends Vue {
       return;
     }
 
-    const currentPortfolios = this.allPortfolios.filter((p) => {
+    this.portfoliosByCategories = this.allPortfolios.filter((p) => {
       return camelCase(p.category) === (category);
     });
-
-    this.portfolios =  currentPortfolios;
-    this.portfoliosByCategories =  currentPortfolios;
+    this.displayPortfolioPerSlice(this.page.currentPage);
   }
 }
 </script>
