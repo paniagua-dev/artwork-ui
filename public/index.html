@@ -6,13 +6,50 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>
+        var artworks = {
+            works: [
+                {
+                    src: '/painting.jpg',
+                    label: 'New painting',
+                    category: 'Design',
+                    description: 'Draw of the summer'
+                },
+                {
+                    src: '/painting_1.jpg',
+                    label: 'New painting 1',
+                    category: 'Draw',
+                    description: 'Draw of the summer'
+                },
+                {
+                    src: '/painting_1.jpg',
+                    label: 'New painting 1',
+                    category: 'Depth Draw',
+                    description: 'Draw of the summer'
+                },
+                {
+                    src: '/painting_2.jpg',
+                    label: 'New painting 2',
+                    category: 'Work',
+                    description: 'Draw of the summer'
+                },
+            ],
+            categories: [
+                'Draw',
+                'Depth Draw',
+                'Work',
+                'Design'
+            ]
+        };
+    </script>
 </head>
 <body>
 <noscript>
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
             Please enable it to continue.</strong>
 </noscript>
-<div id="artwork-ui" style="max-width: 1030px;"></div>
+<div id="artwork-ui" class="artwork-ui" style="max-width: 1030px;">
+</div>
 <!-- built files will be auto injected -->
 </body>
 </html>

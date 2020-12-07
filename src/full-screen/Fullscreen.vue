@@ -33,6 +33,7 @@
 import {IPortfolio} from '@/interfaces/portfolio.interface';
 import {PropType} from 'vue';
 import {Options, Vue} from 'vue-class-component';
+import './Fullscreen.less';
 
 @Options({
   emits: ['update:display'],
@@ -46,54 +47,3 @@ import {Options, Vue} from 'vue-class-component';
 export default class Fullscreen extends Vue {
 }
 </script>
-
-<style lang="less">
-body .portfolio {
-  &__galleria {
-    .p-galleria {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      &-content {
-        flex: 1;
-        justify-content: center;
-      }
-
-      &-thumbnail {
-        &-wrapper {
-          margin-top: 20px;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-        }
-
-        &-item {
-          &-content {
-            img {
-              width: 100%;
-              max-width: 80px;
-            }
-          }
-
-          + & {
-            margin-left: 10px;
-          }
-        }
-
-        &-container {
-          justify-content: center;
-        }
-      }
-    }
-
-    &--label {
-      color: #fff;
-      font-size: 0.8rem;
-      text-align: center;
-    }
-  }
-}
-</style>
