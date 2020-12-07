@@ -113,6 +113,8 @@ body .portfolio {
     height: 350px;
     position: relative;
     display: block;
+    max-width: 300px;
+    margin: auto;
 
     &:before {
       display: flex;
@@ -140,7 +142,7 @@ body .portfolio {
     }
 
     &--wrapper {
-      padding: 0 40px 0 0;
+      padding: 0;
       margin-bottom: 40px;
       overflow: hidden;
       position: relative;
