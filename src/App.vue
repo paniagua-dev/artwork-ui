@@ -11,8 +11,7 @@
           v-for="(category, index) in categories"
           :key="index"
           :label="category"
-          class="p-button-outlined"
-          :class="{'p-button-active': category === currentCategory}"
+          :class="{'active': category === currentCategory}"
           @click="filterByCategory(category)"
       ></Button>
     </div>

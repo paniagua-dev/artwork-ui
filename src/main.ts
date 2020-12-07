@@ -14,7 +14,5 @@ createApp(App)
   .mount('#artwork-ui');
 
 /** IMPORT DEPENDENCIES STYLES **/
-import 'primevue/resources/themes/saga-blue/theme.css';
-import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.min.css';
