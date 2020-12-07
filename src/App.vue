@@ -19,7 +19,7 @@
       <div
           v-for="(portfolio, index) in portfolios"
           :key="index"
-          class="portfolio__item--wrapper p-col-4"
+          class="portfolio__item--wrapper p-col-12 p-md-6 p-lg-4"
           :style="portfolio.style"
       >
         <a
