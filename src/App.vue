@@ -34,12 +34,12 @@
     </div>
     <Paginator
         :rows="page.rows"
-        :totalRecords="allPortfolios.length"
+        :totalRecords="portfoliosByCategories.length"
         @page="pageChanged($event)"
     ></Paginator>
     <Fullscreen
         v-model:display="displayGalleria"
-        :portfolios="portfolios"
+        :portfolios="portfoliosByCategories"
         :numVisible="page.rows"
         :activeIndex="activeIndex"
     >
@@ -63,6 +63,7 @@ import './App.less';
 })
 export default class App extends Vue {
   public allPortfolios: IPortfolio[] = artworks.works || [];
+  public portfoliosByCategories: IPortfolio[] = artworks.works || [];
   public categories = artworks.categories;
   public currentCategory = 'all';
   public componentKey = 0;
@@ -95,8 +96,7 @@ export default class App extends Vue {
   }
 
   private displayPortfolioPerSlice(slice: number) {
-    console.log(slice);
-    this.portfolios = this.allPortfolios.slice(slice, slice + this.page.rows);
+    this.portfolios = this.portfoliosByCategories.slice(slice, slice + this.page.rows);
   }
 
   displayFullscreen(index: number) {
@@ -109,13 +109,18 @@ export default class App extends Vue {
     category = camelCase(category);
 
     if ((category) === 'all') {
+
+      this.portfoliosByCategories = this.allPortfolios;
       this.displayPortfolioPerSlice(this.page.currentPage);
       return;
     }
 
-    this.portfolios = this.allPortfolios.filter((p) => {
+    const currentPortfolios = this.allPortfolios.filter((p) => {
       return camelCase(p.category) === (category);
     });
+
+    this.portfolios =  currentPortfolios;
+    this.portfoliosByCategories =  currentPortfolios;
   }
 }
 </script>
