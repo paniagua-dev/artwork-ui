@@ -4,6 +4,7 @@
       <Button
           label="All"
           class="p-button-outlined"
+          :class="{'active': 'All' === currentCategory}"
           @click="filterByCategory('All')"
       ></Button>
 
@@ -15,11 +16,12 @@
           @click="filterByCategory(category)"
       ></Button>
     </div>
-    <div id="portfolio" class="portfolio p-grid">
+    <div id="portfolio" class="portfolio p-grid" :class="[filtered && 'filtered', pageHasChanged && 'page-has-changed', returnCategoryId(currentCategory)]">
       <div
           v-for="(portfolio, index) in portfolios"
           :key="index"
-          class="portfolio__item--wrapper p-col-12 p-md-6 p-lg-4"
+          class="portfolio__item--wrapper item-in-view p-col-12 p-md-6 p-lg-4"
+          :class="[returnCategoryId(portfolio.category), 'item-page-' + page.page ]"
           :style="portfolio.style"
       >
         <a
@@ -64,13 +66,17 @@ export default class App extends Vue {
   public allPortfolios: IPortfolio[] = artworks.works || [];
   public portfoliosByCategories: IPortfolio[] = artworks.works || [];
   public categories = artworks.categories;
-  public currentCategory = 'all';
+  public currentCategory:string = '';
   public componentKey = 0;
   public displayGalleria = false;
   public activeIndex = 0;
-  private page = {
-    currentPage: 0,
+  public filtered = false;
+  public pageHasChanged = false;
+  private page: PageState = {
+    first: 0,
     rows: 6,
+    page: 0,
+    pageCount: 0,
   };
   private portfolios: IPortfolio[] = [];
 
@@ -90,8 +96,9 @@ export default class App extends Vue {
   }
 
   pageChanged(pageState: PageState) {
-    this.page.currentPage = pageState.first;
+    this.page = pageState;
     this.displayPortfolioPerSlice(pageState.first);
+    this.pageHasChanged = true;
   }
 
   private displayPortfolioPerSlice(slice: number) {
@@ -104,19 +111,25 @@ export default class App extends Vue {
   }
 
   filterByCategory(category: string) {
+    this.filtered = true;
     this.currentCategory = category;
-    category = camelCase(category);
-    if ((category) === 'all') {
+    category = this.returnCategoryId(category);
 
+    if ((category) === 'all') {
       this.portfoliosByCategories = this.allPortfolios;
-      this.displayPortfolioPerSlice(this.page.currentPage);
+      this.displayPortfolioPerSlice(this.page.first);
       return;
     }
 
     this.portfoliosByCategories = this.allPortfolios.filter((p) => {
-      return camelCase(p.category) === (category);
+      return this.returnCategoryId(p.category || '') === (category);
     });
-    this.displayPortfolioPerSlice(this.page.currentPage);
+
+    this.displayPortfolioPerSlice(this.page.first);
+  }
+
+  returnCategoryId(category: string): string {
+    return camelCase(category);
   }
 }
 </script>
