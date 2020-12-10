@@ -1,22 +1,20 @@
 <template>
   <template v-if="allPortfolios && allPortfolios.length > 0">
-    <div class="portfolio__buttons--wrapper">
-      <Button
-          label="All"
-          class="p-button-outlined"
-          :class="{'active': 'All' === currentCategory}"
-          @click="filterByCategory('All')"
-      ></Button>
-
-      <Button
-          v-for="(category, index) in categories"
-          :key="index"
-          :label="category"
-          :class="{'active': category === currentCategory}"
-          @click="filterByCategory(category)"
-      ></Button>
-    </div>
-    <div id="portfolio" class="portfolio p-grid" :class="[filtered && 'filtered', pageHasChanged && 'page-has-changed', returnCategoryId(currentCategory)]">
+    <Filter
+        :buttons="categories"
+        @filtered-by-button="sortByCategory($event)"
+        :selections="filters"
+        @filtered-by-selection="sortByFilter($event)"
+    ></Filter>
+    <div
+        id="portfolio"
+        class="portfolio p-grid"
+        :class="[
+            filtered && 'filtered',
+            pageHasChanged && 'page-has-changed',
+            returnCategoryId(currentCategory)
+        ]"
+    >
       <div
           v-for="(portfolio, index) in portfolios"
           :key="index"
@@ -35,12 +33,12 @@
     </div>
     <Paginator
         :rows="page.rows"
-        :totalRecords="portfoliosByCategories.length"
+        :totalRecords="portfoliosFiltered.length"
         @page="pageChanged($event)"
     ></Paginator>
     <Fullscreen
         v-model:display="displayGalleria"
-        :portfolios="portfoliosByCategories"
+        :portfolios="portfoliosFiltered"
         :numVisible="page.rows"
         :activeIndex="activeIndex"
     >
@@ -49,7 +47,8 @@
 </template>
 
 <script lang="ts">
-declare const artworks: { works: IPortfolio[], categories: string[] };
+declare const artworks: { works: IPortfolio[], categories: string[], filters?: string[] };
+import Filter from '@/filter/Filter.vue';
 import Fullscreen from '@/full-screen/Fullscreen.vue';
 import {IPortfolio} from '@/interfaces/portfolio.interface';
 import {camelCase} from 'lodash';
@@ -60,13 +59,16 @@ import './App.less';
 @Options({
   components: {
     Fullscreen,
+    Filter,
   },
 })
 export default class App extends Vue {
   public allPortfolios: IPortfolio[] = artworks.works || [];
-  public portfoliosByCategories: IPortfolio[] = artworks.works || [];
+  public portfoliosFiltered: IPortfolio[] = artworks.works || [];
+  public filters = artworks.filters;
   public categories = artworks.categories;
-  public currentCategory:string = '';
+  public currentCategory: string = '';
+  public currentFilter: string = '';
   public componentKey = 0;
   public displayGalleria = false;
   public activeIndex = 0;
@@ -102,7 +104,7 @@ export default class App extends Vue {
   }
 
   private displayPortfolioPerSlice(slice: number) {
-    this.portfolios = this.portfoliosByCategories.slice(slice, slice + this.page.rows);
+    this.portfolios = this.portfoliosFiltered.slice(slice, slice + this.page.rows);
   }
 
   displayFullscreen(index: number) {
@@ -110,19 +112,29 @@ export default class App extends Vue {
     this.displayGalleria = !this.displayGalleria;
   }
 
-  filterByCategory(category: string) {
-    this.filtered = true;
+  sortByCategory(category: string) {
+    this.setAsFiltered();
     this.currentCategory = category;
     category = this.returnCategoryId(category);
 
     if ((category) === 'all') {
-      this.portfoliosByCategories = this.allPortfolios;
+      this.portfoliosFiltered = this.allPortfolios;
       this.displayPortfolioPerSlice(this.page.first);
       return;
     }
 
-    this.portfoliosByCategories = this.allPortfolios.filter((p) => {
-      return this.returnCategoryId(p.category || '') === (category);
+    this.portfoliosFiltered = this.allPortfolios.filter((p) => {
+      return this.returnCategoryId(p.category || '') === category;
+    });
+
+    this.displayPortfolioPerSlice(this.page.first);
+  }
+
+  sortByFilter(filter: string) {
+    this.setAsFiltered();
+    this.currentFilter = filter;
+    this.portfoliosFiltered = this.allPortfolios.filter((p) => {
+      return p.filter === filter;
     });
 
     this.displayPortfolioPerSlice(this.page.first);
@@ -130,6 +142,12 @@ export default class App extends Vue {
 
   returnCategoryId(category: string): string {
     return camelCase(category);
+  }
+
+  private setAsFiltered() {
+    if (!this.filtered) {
+      this.filtered = true;
+    }
   }
 }
 </script>

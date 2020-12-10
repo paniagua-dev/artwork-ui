@@ -3,4 +3,5 @@ export interface IPortfolio {
     label?: string;
     category?: string;
     description?: string;
+    filter?: string;
 }
