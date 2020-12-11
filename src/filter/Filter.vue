@@ -6,6 +6,7 @@
         @complete="search($event)"
         :minLength="2"
         @item-select="select($event)"
+        @clear="clear()"
         :dropdown="true"/>
   </div>
   <div class="portfolio__filter__buttons--wrapper">
@@ -72,6 +73,10 @@ export default class Filter extends Vue {
 
   select(selection: {originalEvent: Event, value: any}) {
     this.$emit('filtered-by-selection', selection.value);
+  }
+
+  clear(){
+    this.$emit('filtered-by-selection', '');
   }
 
   mounted() {

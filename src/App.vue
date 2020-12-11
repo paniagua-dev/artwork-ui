@@ -123,6 +123,15 @@ export default class App extends Vue {
       return;
     }
 
+    if (this.currentFilter) {
+      this.filter(this.allPortfolios, this.currentFilter);
+      this.portfoliosFiltered = this.portfoliosFiltered.filter((p) => {
+        return this.returnCategoryId(p.category || '') === category;
+      });
+      this.displayPortfolioPerSlice(this.page.first);
+      return;
+    }
+
     this.portfoliosFiltered = this.allPortfolios.filter((p) => {
       return this.returnCategoryId(p.category || '') === category;
     });
@@ -130,14 +139,24 @@ export default class App extends Vue {
     this.displayPortfolioPerSlice(this.page.first);
   }
 
-  sortByFilter(filter: string) {
-    this.setAsFiltered();
-    this.currentFilter = filter;
-    this.portfoliosFiltered = this.allPortfolios.filter((p) => {
-      return p.filter === filter;
-    });
+  sortByFilter(filterValue: string) {
+    if (filterValue !== this.currentFilter) {
+      this.currentFilter = filterValue;
+      const updateViewByFilter = () => {
+        if (this.currentCategory && this.currentCategory !== 'all') {
+          this.sortByCategory(this.currentCategory);
+          if (filterValue !== '') {
+            this.filter(this.portfoliosFiltered, filterValue);
+          }
+          return;
+        }
+        this.portfoliosFiltered = this.allPortfolios;
+      };
 
-    this.displayPortfolioPerSlice(this.page.first);
+      updateViewByFilter();
+      this.setAsFiltered();
+      this.displayPortfolioPerSlice(this.page.first);
+    }
   }
 
   returnCategoryId(category: string): string {
@@ -149,5 +168,10 @@ export default class App extends Vue {
       this.filtered = true;
     }
   }
+
+  private filter(portfolios: IPortfolio[], filterBy: string) {
+    this.portfoliosFiltered = portfolios.filter((p) => p.filter === filterBy);
+  }
+
 }
 </script>
