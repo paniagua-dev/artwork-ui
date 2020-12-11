@@ -13,7 +13,9 @@
   >
     <template #item="{item}">
       <figure>
-        <div :style="{'background-image': 'url(' + item.src + ')'}" :title="item.label"></div>
+        <div class="portfolio__galleria--image">
+          <img :src="item.src" :alt="item.label" />
+        </div>
         <figcaption>
           <p class="portfolio__galleria--label">
             <b>{{ item.label }}</b>
