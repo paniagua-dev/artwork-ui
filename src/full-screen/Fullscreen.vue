@@ -33,7 +33,6 @@
 import {IPortfolio} from '@/interfaces/portfolio.interface';
 import {PropType} from 'vue';
 import {Options, Vue} from 'vue-class-component';
-import './Fullscreen.less';
 
 @Options({
   emits: ['update:display'],
