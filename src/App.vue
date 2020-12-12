@@ -91,35 +91,49 @@ export default class App extends Vue {
   }
 
   mounted() {
-    this.displayPortfolioPerSlice(0);
+    this.displayPortfoliosPerSlice(0);
     if (this.allPortfolios.length < 1) {
       console.warn('The portfolios are not defined! Please define allPortfolios var.');
     }
   }
-
-  pageChanged(pageState: PageState) {
+  /**
+   * Fired each time the page change
+   */
+  public pageChanged(pageState: PageState): void {
     this.page = pageState;
-    this.displayPortfolioPerSlice(pageState.first);
+    this.displayPortfoliosPerSlice(pageState.first);
     this.pageHasChanged = true;
   }
 
-  private displayPortfolioPerSlice(slice: number) {
+  /**
+   * Update the view and display a set of portfolios per page
+   * @param slice: number = Slice of portfolios to display in the page
+   */
+  private displayPortfoliosPerSlice(slice: number): void {
     this.portfolios = this.portfoliosFiltered.slice(slice, slice + this.page.rows);
   }
 
-  displayFullscreen(index: number) {
+  /**
+   * Display a gallery of portfolios in full screen
+   * @param index: number = Index of the portfolio to display first
+   */
+  public displayFullscreen(index: number): void {
     this.activeIndex = index;
     this.displayGalleria = !this.displayGalleria;
   }
 
-  sortByCategory(category: string) {
+  /**
+   * Update the view with the selected category
+   * @param category: string = name of the category to display
+   */
+  public sortByCategory(category: string): void {
     this.setAsFiltered();
     this.currentCategory = category;
     category = this.returnCategoryId(category);
 
     if ((category) === 'all') {
       this.portfoliosFiltered = this.allPortfolios;
-      this.displayPortfolioPerSlice(this.page.first);
+      this.displayPortfoliosPerSlice(this.page.first);
       return;
     }
 
@@ -128,7 +142,7 @@ export default class App extends Vue {
       this.portfoliosFiltered = this.portfoliosFiltered.filter((p) => {
         return this.returnCategoryId(p.category || '') === category;
       });
-      this.displayPortfolioPerSlice(this.page.first);
+      this.displayPortfoliosPerSlice(this.page.first);
       return;
     }
 
@@ -136,10 +150,14 @@ export default class App extends Vue {
       return this.returnCategoryId(p.category || '') === category;
     });
 
-    this.displayPortfolioPerSlice(this.page.first);
+    this.displayPortfoliosPerSlice(this.page.first);
   }
 
-  sortByFilter(filterValue: string) {
+  /**
+   * Update the view with the selected filter
+   * @param filterValue: string = name of the filter to display
+   */
+  public sortByFilter(filterValue: string): void {
     if (filterValue !== this.currentFilter) {
       this.currentFilter = filterValue;
       const updateViewByFilter = () => {
@@ -155,21 +173,24 @@ export default class App extends Vue {
 
       updateViewByFilter();
       this.setAsFiltered();
-      this.displayPortfolioPerSlice(this.page.first);
+      this.displayPortfoliosPerSlice(this.page.first);
     }
   }
 
-  returnCategoryId(category: string): string {
+  public returnCategoryId(category: string): string {
     return camelCase(category);
   }
 
-  private setAsFiltered() {
+  /**
+   * Allow to set the status of the Artwork as filtered
+   */
+  private setAsFiltered(): void {
     if (!this.filtered) {
       this.filtered = true;
     }
   }
 
-  private filter(portfolios: IPortfolio[], filterBy: string) {
+  private filter(portfolios: IPortfolio[], filterBy: string): void {
     this.portfoliosFiltered = portfolios.filter((p) => p.filter === filterBy);
   }
 
