@@ -1,5 +1,5 @@
 <template>
-  <div class="portfolio__filter__container">
+  <div class="portfolio__filter--wrapper">
     <div class="portfolio__filter__select--wrapper" v-if="selections && selections.length > 0">
       <Autocomplete
           v-model="model"
