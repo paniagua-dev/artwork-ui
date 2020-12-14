@@ -1,30 +1,33 @@
 <template>
-  <div class="portfolio__filter__select--wrapper" v-if="selections && selections.length > 0">
-    <Autocomplete
-        v-model="model"
-        :suggestions="suggestions"
-        @complete="search($event)"
-        :minLength="2"
-        @item-select="select($event)"
-        @clear="clear()"
-        :dropdown="true"/>
-  </div>
-  <div class="portfolio__filter__buttons--wrapper">
-    <Button
-        label="All"
-        class="p-button-outlined"
-        :class="{'active': 'All' === currentBtnActive}"
-        @click="filter('All')"
-        v-if="activeAllButton"
-    ></Button>
+  <div class="portfolio__filter__container">
+    <div class="portfolio__filter__select--wrapper" v-if="selections && selections.length > 0">
+      <Autocomplete
+          v-model="model"
+          :suggestions="suggestions"
+          @complete="search($event)"
+          :minLength="2"
+          @item-select="select($event)"
+          @clear="clear()"
+          :dropdown="true"
+      />
+    </div>
+    <div class="portfolio__filter__buttons--wrapper">
+      <Button
+          label="All"
+          class="p-button-outlined"
+          :class="{'active': 'All' === currentBtnActive}"
+          @click="filter('All')"
+          v-if="activeAllButton"
+      ></Button>
 
-    <Button
-        v-for="(btn, index) in buttons"
-        :key="index"
-        :label="btn"
-        :class="{'active': btn === currentBtnActive}"
-        @click="filter(btn)"
-    ></Button>
+      <Button
+          v-for="(btn, index) in buttons"
+          :key="index"
+          :label="btn"
+          :class="{'active': btn === currentBtnActive}"
+          @click="filter(btn)"
+      ></Button>
+    </div>
   </div>
 </template>
 
@@ -71,11 +74,11 @@ export default class Filter extends Vue {
     return get(this.$props, 'selections');
   }
 
-  select(selection: {originalEvent: Event, value: any}) {
+  select(selection: { originalEvent: Event, value: any }) {
     this.$emit('filtered-by-selection', selection.value);
   }
 
-  clear(){
+  clear() {
     this.$emit('filtered-by-selection', '');
   }
 
