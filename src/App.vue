@@ -69,7 +69,6 @@ export default class App extends Vue {
   public categories = artworks.categories;
   public currentCategory: string = '';
   public currentFilter: string = '';
-  public componentKey = 0;
   public displayGalleria = false;
   public activeIndex = 0;
   public filtered = false;
@@ -86,7 +85,6 @@ export default class App extends Vue {
   data() {
     return {
       portfolios: [],
-      componentKey: 0,
       displayGalleria: false,
     };
   }
