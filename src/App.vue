@@ -82,13 +82,6 @@ export default class App extends Vue {
   private portfolios: IPortfolio[] = [];
   public camelCase = camelCase;
 
-  data() {
-    return {
-      portfolios: [],
-      displayGalleria: false,
-    };
-  }
-
   mounted() {
     this.updateView(0);
     if (this.allPortfolios.length < 1) {
