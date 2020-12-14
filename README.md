@@ -1,4 +1,7 @@
 # artwork-ui
+A Little portfolio gallery with pagination and filters
+
+![alt text](https://github.com/paniagua-dev/artwork-ui/blob/2ffd774703273f7a5a9e9979044005e761b27e3f/public/screenshot.png?raw=true)
 
 ## Project setup
 ```
@@ -19,6 +22,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
