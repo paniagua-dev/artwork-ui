@@ -44,10 +44,27 @@
     }
   }
 
-  &__filter__buttons {
+  &__filter {
     &--wrapper {
-      margin-bottom: 24px;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+
+      .p-autocomplete .p-button {
+        display: flex;
+        align-items: center;
+        border-left: 0;
+
+        .p-button-label {
+          display: none;
+        }
+      }
+    }
+
+    &__buttons {
+      &--wrapper {
+        margin-bottom: 24px;
+        text-align: center;
+      }
     }
   }
 }

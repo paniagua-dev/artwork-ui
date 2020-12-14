@@ -12,14 +12,14 @@
         :class="[
             filtered && 'filtered',
             pageHasChanged && 'page-has-changed',
-            returnCategoryId(currentCategory)
+            camelCase(currentCategory)
         ]"
     >
       <div
           v-for="(portfolio, index) in portfolios"
           :key="index"
           class="portfolio__item--wrapper item-in-view p-col-12 p-md-6 p-lg-4"
-          :class="[returnCategoryId(portfolio.category), 'item-page-' + page.page ]"
+          :class="[camelCase(portfolio.category), 'item-page-' + page.page ]"
           :style="portfolio.style"
       >
         <a
@@ -81,6 +81,7 @@ export default class App extends Vue {
     pageCount: 0,
   };
   private portfolios: IPortfolio[] = [];
+  public camelCase = camelCase;
 
   data() {
     return {
@@ -91,26 +92,27 @@ export default class App extends Vue {
   }
 
   mounted() {
-    this.displayPortfoliosPerSlice(0);
+    this.updateView(0);
     if (this.allPortfolios.length < 1) {
       console.warn('The portfolios are not defined! Please define allPortfolios var.');
     }
   }
+
   /**
    * Fired each time the page change
    */
   public pageChanged(pageState: PageState): void {
     this.page = pageState;
-    this.displayPortfoliosPerSlice(pageState.first);
+    this.updateView(pageState.first);
     this.pageHasChanged = true;
   }
 
   /**
    * Update the view and display a set of portfolios per page
-   * @param slice: number = Slice of portfolios to display in the page
+   * @param firstElementIndex: number = Slice of portfolios to display in the page
    */
-  private displayPortfoliosPerSlice(slice: number): void {
-    this.portfolios = this.portfoliosFiltered.slice(slice, slice + this.page.rows);
+  private updateView(firstElementIndex: number): void {
+    this.portfolios = this.portfoliosFiltered.slice(firstElementIndex, firstElementIndex + this.page.rows);
   }
 
   /**
@@ -122,63 +124,40 @@ export default class App extends Vue {
     this.displayGalleria = !this.displayGalleria;
   }
 
-  /**
-   * Update the view with the selected category
-   * @param category: string = name of the category to display
-   */
-  public sortByCategory(category: string): void {
-    this.setAsFiltered();
-    this.currentCategory = category;
-    category = this.returnCategoryId(category);
+  public sort(category: string, filter: string): void {
+    this.currentFilter = camelCase(filter) || this.currentFilter;
+    this.currentCategory = camelCase(category) || this.currentCategory;
+    let portfolios = this.allPortfolios;
 
-    if ((category) === 'all') {
-      this.portfoliosFiltered = this.allPortfolios;
-      this.displayPortfoliosPerSlice(this.page.first);
-      return;
-    }
-
-    if (this.currentFilter) {
-      this.filter(this.allPortfolios, this.currentFilter);
-      this.portfoliosFiltered = this.portfoliosFiltered.filter((p) => {
-        return this.returnCategoryId(p.category || '') === category;
+    //Sort by current category
+    if (this.currentCategory) {
+      portfolios = portfolios.filter((p) => {
+        return camelCase(p.category || '') === this.currentCategory;
       });
-      this.displayPortfoliosPerSlice(this.page.first);
-      return;
     }
 
-    this.portfoliosFiltered = this.allPortfolios.filter((p) => {
-      return this.returnCategoryId(p.category || '') === category;
-    });
+    //Sort by current filter
+    if (this.currentFilter) {
+      portfolios = portfolios.filter((p) => {
+        return camelCase(p.filter || '') === this.currentFilter;
+      });
+    }
 
-    this.displayPortfoliosPerSlice(this.page.first);
+    this.portfoliosFiltered = portfolios;
+    this.setAsFiltered();
+    this.updateView(this.page.first);
   }
 
-  /**
-   * Update the view with the selected filter
-   * @param filterValue: string = name of the filter to display
-   */
   public sortByFilter(filterValue: string): void {
     if (filterValue !== this.currentFilter) {
-      this.currentFilter = filterValue;
-      const updateViewByFilter = () => {
-        if (this.currentCategory && this.currentCategory !== 'all') {
-          this.sortByCategory(this.currentCategory);
-          if (filterValue !== '') {
-            this.filter(this.portfoliosFiltered, filterValue);
-          }
-          return;
-        }
-        this.portfoliosFiltered = this.allPortfolios;
-      };
-
-      updateViewByFilter();
-      this.setAsFiltered();
-      this.displayPortfoliosPerSlice(this.page.first);
+      this.sort(this.currentCategory, filterValue);
     }
   }
 
-  public returnCategoryId(category: string): string {
-    return camelCase(category);
+  public sortByCategory(category: string): void {
+    if (category !== this.currentCategory) {
+      this.sort(category, this.currentFilter);
+    }
   }
 
   /**
@@ -188,10 +167,6 @@ export default class App extends Vue {
     if (!this.filtered) {
       this.filtered = true;
     }
-  }
-
-  private filter(portfolios: IPortfolio[], filterBy: string): void {
-    this.portfoliosFiltered = portfolios.filter((p) => p.filter === filterBy);
   }
 
 }
