@@ -5,6 +5,7 @@
         @filtered-by-button="sortByCategory($event)"
         :selections="filters"
         @filtered-by-selection="sortByFilter($event)"
+        :filterLabel="filterLabel"
     ></Filter>
     <div
         id="portfolio"
@@ -47,7 +48,7 @@
 </template>
 
 <script lang="ts">
-declare const artworks: { works: IPortfolio[], categories: string[], filters?: string[] };
+declare const artworks: { works: IPortfolio[], categories: string[], filters?: string[], filterLabel?: string };
 import Filter from '@/filter/Filter.vue';
 import Fullscreen from '@/full-screen/Fullscreen.vue';
 import {IPortfolio} from '@/interfaces/portfolio.interface';
@@ -67,6 +68,7 @@ export default class App extends Vue {
   public portfoliosFiltered: IPortfolio[] = artworks.works || [];
   public filters = artworks.filters;
   public categories = artworks.categories;
+  public filterLabel = artworks.filterLabel || '';
   public currentCategory: string = '';
   public currentFilter: string = '';
   public displayGalleria = false;
@@ -84,9 +86,7 @@ export default class App extends Vue {
 
   mounted() {
     this.updateView(0);
-    if (this.allPortfolios.length < 1) {
-      console.warn('The portfolios are not defined! Please define allPortfolios var.');
-    }
+    console.log(this.filterLabel);
   }
 
   /**

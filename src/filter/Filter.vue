@@ -1,6 +1,7 @@
 <template>
   <div class="portfolio__filter--wrapper">
     <div class="portfolio__filter__select--wrapper" v-if="selections && selections.length > 0">
+      <label v-if="!!filterLabel">{{filterLabel}}</label>
       <Autocomplete
           v-model="model"
           :suggestions="suggestions"
@@ -39,6 +40,7 @@ import {Options, Vue} from 'vue-class-component';
 @Options({
   emits: ['filtered-by-button', 'filtered-by-selection'],
   props: {
+    filterLabel: String,
     buttons: Array as PropType<string[]>,
     activeAllButton: {
       type: Boolean,
