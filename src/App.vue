@@ -121,14 +121,14 @@ export default class App extends Vue {
     let portfolios = this.allPortfolios;
 
     //Sort by current category
-    if (this.currentCategory) {
+    if (this.currentCategory && this.currentCategory !== 'all') {
       portfolios = portfolios.filter((p) => {
         return camelCase(p.category || '') === this.currentCategory;
       });
     }
 
     //Sort by current filter
-    if (this.currentFilter) {
+    if (this.currentFilter && this.currentFilter !== '') {
       portfolios = portfolios.filter((p) => {
         return camelCase(p.filter || '') === this.currentFilter;
       });
