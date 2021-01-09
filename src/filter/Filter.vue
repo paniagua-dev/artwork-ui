@@ -5,7 +5,7 @@
       <Dropdown
           :options="suggestions"
           @change="select($event)"
-          :modelValue="model"
+          v-model="model"
       />
     </div>
     <div class="portfolio__filter__buttons--wrapper">
