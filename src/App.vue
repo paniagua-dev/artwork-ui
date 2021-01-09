@@ -86,7 +86,6 @@ export default class App extends Vue {
 
   mounted() {
     this.updateView(0);
-    console.log(this.filterLabel);
   }
 
   /**
@@ -128,7 +127,7 @@ export default class App extends Vue {
     }
 
     //Sort by current filter
-    if (this.currentFilter && this.currentFilter !== '') {
+    if (this.currentFilter && this.currentFilter !== '' && this.currentFilter !== 'allYears') {
       portfolios = portfolios.filter((p) => {
         return camelCase(p.filter || '') === this.currentFilter;
       });

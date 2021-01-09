@@ -1,15 +1,11 @@
 <template>
   <div class="portfolio__filter--wrapper">
     <div class="portfolio__filter__select--wrapper" v-if="selections && selections.length > 0">
-      <label v-if="!!filterLabel">{{filterLabel}}</label>
-      <Autocomplete
-          v-model="model"
-          :suggestions="suggestions"
-          @complete="search($event)"
-          :minLength="2"
-          @item-select="select($event)"
-          @clear="clear()"
-          :dropdown="true"
+      <label v-if="!!filterLabel">{{ filterLabel }}</label>
+      <Dropdown
+          :options="suggestions"
+          @change="select($event)"
+          :modelValue="model"
       />
     </div>
     <div class="portfolio__filter__buttons--wrapper">
@@ -56,36 +52,22 @@ import {Options, Vue} from 'vue-class-component';
 })
 export default class Filter extends Vue {
   public currentBtnActive = '';
-  public model = '';
   public suggestions: string[] = [];
+  public model = '';
 
   filter(btn: string): void {
     this.currentBtnActive = btn;
     this.$emit('filtered-by-button', btn);
   }
 
-  search(input: { originalEvent: Event, query: string }) {
-    let search: string[] = [];
-    this.getSelections().forEach((selection: string) => {
-      (selection.indexOf(input.query) >= 0) && search.push(selection);
-    });
-    this.suggestions = (search.length > 0) ? search : this.getSelections();
-  }
-
-  getSelections() {
-    return get(this.$props, 'selections');
-  }
-
   select(selection: { originalEvent: Event, value: any }) {
     this.$emit('filtered-by-selection', selection.value);
   }
 
-  clear() {
-    this.$emit('filtered-by-selection', '');
-  }
-
   mounted() {
-    this.suggestions = this.getSelections();
+    this.suggestions = get(this.$props, 'selections');
+    this.suggestions.unshift('All years');
+    this.model = 'All years';
   }
 }
 </script>

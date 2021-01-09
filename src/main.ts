@@ -1,5 +1,5 @@
 import Button from 'primevue/button';
-import AutoComplete from 'primevue/autocomplete';
+import Dropdown from 'primevue/components/dropdown/Dropdown';
 import Galleria from 'primevue/galleria';
 import Paginator from 'primevue/paginator';
 import { createApp } from 'vue';
@@ -9,7 +9,7 @@ import App from './App.vue';
 createApp(App)
   .component('Paginator', Paginator)
   .component('Galleria', Galleria)
-  .component('Autocomplete', AutoComplete)
+  .component('Dropdown', Dropdown)
   .component('Button', Button)
   .mount('#artwork-ui');
 
